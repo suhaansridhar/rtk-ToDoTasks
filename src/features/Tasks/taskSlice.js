@@ -23,9 +23,21 @@ const taskSlice = createSlice({
                 state['completed'].push(completedTask);
                 state['incomplete'] = state['incomplete'].filter(task => task.id !== action.payload);
             }
+        },
+
+        removeTaskFromCompleted(state, action){
+            state['completed'] = state['completed'].filter(task => task.id !== action.payload);
+        },
+
+        incompleteTask(state, action){
+            const incompleteTask = state['completed'].find(task => task.id === action.payload);
+            if(incompleteTask){
+                state['incomplete'].push(incompleteTask);
+                state['completed'] = state['completed'].filter(task => task.id !== action.payload)
+            }
         }
     }
 })
 
-export const {addTask, completedTask, removeTask} = taskSlice.actions;
+export const {addTask, completedTask, removeTask, incompleteTask, removeTaskFromCompleted} = taskSlice.actions;
 export default taskSlice.reducer;

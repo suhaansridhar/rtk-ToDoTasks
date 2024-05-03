@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit';
 import {useDispatch, useSelector} from 'react-redux';
-import { addTask, removeTask, completedTask } from '../features/Tasks/taskSlice';
+import { addTask, removeTask, completedTask, incompleteTask, removeTaskFromCompleted } from '../features/Tasks/taskSlice';
 import { useState, useRef } from 'react';
 
 function ToDoComponent() {
@@ -33,13 +33,36 @@ function ToDoComponent() {
   return (
     <div className="todo--container">
       <div className="todo--container--tasks">
+
+      <div className='show--completed--tasks'>
+        <button onClick={showCompletedTasks} className="show--completed--tasks--button">Completed Tasks</button>
+            <br /><br />  
+        {showComplete && (
+              <ul>
+                  {tasksComplete.map(task => (
+                      <li key={task.id} className="tasks--items--completed">
+                          <h2 className='task--name--completed'>{task.taskName}</h2>
+                          <div className="tasks--items--completed--button">
+                            <button onClick={() => dispatch(incompleteTask(task.id))}>Incomplete</button>
+                            <button onClick={() => dispatch(removeTaskFromCompleted(task.id))}>Remove</button>
+                          </div>
+                      </li>
+                  ))}
+              </ul>
+          )}
+      </div>
+
+      <br /><br />
+
         <div className="todo--container--displaying--tasks">
           <ul>
             {tasks.map((task) => (
               <li key={task.id} className="tasks--items">
+              <p className='tasks--items--name'>{task.taskName}</p>
+              <div className="tasks--items--button">
                 <button onClick={() => dispatch(completedTask(task.id))}>Completed</button>
-                <p>{task.taskName}</p>
                 <button onClick={() => dispatch(removeTask(task.id))}>Remove</button>
+              </div>
               </li>
             ))}
           </ul>
@@ -63,19 +86,6 @@ function ToDoComponent() {
             <button onClick={handleSubmit}>Add Task</button>
         </div>
       </div>
-
-    <div className='show--completed--tasks'>
-        <button onClick={showCompletedTasks}>Completed Tasks</button>
-            {showComplete && (
-                <ul>
-                    {tasksComplete.map(task => (
-                        <li key={task.id}>
-                            <h2 className='task--name--completed'>{task.taskName}</h2>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
 
     </div>
   );
