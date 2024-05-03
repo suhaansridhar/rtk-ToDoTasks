@@ -85,3 +85,7 @@ input::placeholder{
   height: 2rem;
   margin-right: 10px;
 }
+
+.task--name--completed{
+  text-decoration: line-through;
+}

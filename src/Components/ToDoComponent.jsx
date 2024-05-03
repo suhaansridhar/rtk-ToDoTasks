@@ -1,13 +1,19 @@
 import { nanoid } from '@reduxjs/toolkit';
 import {useDispatch, useSelector} from 'react-redux';
-import { addTask, removeTask } from '../features/Tasks/taskSlice';
+import { addTask, removeTask, completedTask } from '../features/Tasks/taskSlice';
 import { useState, useRef } from 'react';
 
 function ToDoComponent() {
   const [taskName, setTaskName] = useState("");
   const inputRef = useRef(null);
   const tasks = useSelector(state => state.tasks['incomplete']);
+  const tasksComplete = useSelector(state => state.tasks['completed']);
+  const [showComplete, setShowComplete] = useState(false);
   const dispatch = useDispatch();
+
+  function showCompletedTasks(){
+    setShowComplete(!showComplete);
+  }
 
   function handleSubmit() {
     if (taskName.trim() !== "") {
@@ -31,6 +37,7 @@ function ToDoComponent() {
           <ul>
             {tasks.map((task) => (
               <li key={task.id} className="tasks--items">
+                <button onClick={() => dispatch(completedTask(task.id))}>Completed</button>
                 <p>{task.taskName}</p>
                 <button onClick={() => dispatch(removeTask(task.id))}>Remove</button>
               </li>
@@ -56,6 +63,20 @@ function ToDoComponent() {
             <button onClick={handleSubmit}>Add Task</button>
         </div>
       </div>
+
+    <div className='show--completed--tasks'>
+        <button onClick={showCompletedTasks}>Completed Tasks</button>
+            {showComplete && (
+                <ul>
+                    {tasksComplete.map(task => (
+                        <li key={task.id}>
+                            <h2 className='task--name--completed'>{task.taskName}</h2>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+
     </div>
   );
 }
